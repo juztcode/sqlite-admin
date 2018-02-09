@@ -6,11 +6,12 @@ sqlite admin uses express, sqlite3 and body-parser packages.
 1. express: this package based on express framework if you are using other please use functions inside admin.service and need to define routes.
 2. body-parser: use body-parser json middleware to parse request json body
 3. sqlite3: client library use to access sqlite database
+4. jsonwebtoken: use to generate and verify auth token
 
 # How to use
 1. install required packages
 ```bash
-npm install express body-parser sqlite3 --save
+npm install express body-parser sqlite3 jsonwebtoken --save
 ```
 2. create express app and use body-parser
 ```javascript

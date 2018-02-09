@@ -14,7 +14,7 @@ app.use(bodyParser.json());
  * here /api/admin end point is redirected to adminRouter
  * routes related to admin defined inside adminRouter
  */
-app.use('/api/admin', adminRouter);
+app.use('/admin', adminRouter);
 
 const PORT = process.env.PORT || 3000;
 

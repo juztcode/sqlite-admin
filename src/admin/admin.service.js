@@ -1,8 +1,28 @@
 const sqlite3 = require('sqlite3').verbose();
+const jwt = require('jsonwebtoken');
 const adminConfig = require('./admin.config');
 const adminHelper = require('./admin.helper');
 
 const db = new sqlite3.Database(adminConfig.database);
+
+const auth = function (password) {
+    const secret = process.env.SECRET || adminConfig.secret;
+    const adminPass = process.env.ADMIN_PASS || adminConfig.adminPass;
+    
+    if (password === adminPass) {
+        const token = jwt.sign({
+            type: 'bearer',
+            issuer: 'juztcode',
+            audience: 'admins'
+        }, secret, {
+            expiresIn: 60 * 60
+        });
+
+        return token;
+    } else {
+        return null;
+    }
+}
 
 const tables = function () {
     return new Promise(resolve => {
@@ -90,6 +110,7 @@ const remove = function (tableName, conditions) {
 }
 
 module.exports = {
+    auth: auth,
     tables: tables,
     meta: meta,
     view: view,
