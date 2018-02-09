@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
+    <title>SQLite Admin</title>
+    <style>
+        .container {
+            padding-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <form class="form-inline">
+                        <div class="form-group mx-sm-3 mb-2">
+                            <label for="input-password" class="sr-only">Password</label>
+                            <input type="password" class="form-control" id="input-password" v-model="password" placeholder="Enter admin password">
+                        </div>
+                        <button type="button" class="btn btn-primary mb-2" v-on:click="auth()">Submit</button>
+                    </form>
+                </div>
+            </div>
+            <br>
+            <div class="row" v-show="token">
+                <div class="col-4">
+                    <div class="list-group">
+                        <button v-for="table in tables" :key="name" type="button" class="list-group-item list-group-item-action" v-on:click="selectTable(table.name)">
+                            {{table.name}}
+                        </button>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" v-for="(tableColumn, index) in tableColumns" :key="index">{{tableColumn.name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(row, index) in tableData" :key="index">
+                                <td v-for="key in Object.keys(row)" :key="key">
+                                    <input type="text" v-model="tableData[index][key]">
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" v-on:click="updateRow(row)">Update</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                password: '',
+                token: null,
+                tables: [],
+                currentTableName: '',
+                tableColumns: [],
+                tableData: []
+            },
+            methods: {
+                auth: function () {
+                    axios.post('/admin/auth', {
+                        password: this.password
+                    }).then(response => {
+                        alert('login success');
+                        this.token = response.data.token;
+                        this.password = '';
+                        this.getTables();
+                    }).catch(response => {
+                        alert('login failed');
+                    });
+                },
+                getTables: function () {
+                    axios.get('/admin/tables', {
+                        headers: {
+                            Authorization: this.token
+                        }
+                    }).then(response => {
+                        this.tables = response.data.data;
+                    });
+                },
+                selectTable: function (tableName) {
+                    this.currentTableName = tableName;
+                    axios.get(`/admin/tables/${tableName}`, {
+                        headers: {
+                            Authorization: this.token
+                        }
+                    }).then(response => {
+                        this.tableColumns = response.data.data;
+                    });
+                    axios.get(`/admin/tables/${tableName}/rows`, {
+                        headers: {
+                            Authorization: this.token
+                        }
+                    }).then(response => {
+                        this.tableData = response.data.data;
+                    });
+                },
+                updateRow: function (row) {
+                    var params = {};
+                    var rowClone = {};
+                    Object.assign(rowClone, row);
+                    this.tableColumns.forEach(element => {
+                        if (element.pk === 1) {
+                            params[element.name] = rowClone[element.name];
+                            delete rowClone[element.name];
+                        }
+                    });
+
+                    axios.patch(`/admin/tables/${this.currentTableName}/rows`, rowClone, {
+                        headers: {
+                            Authorization: this.token
+                        },
+                        params: params
+                    }).then(response => {
+                        alert('row updated');
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -5,6 +5,7 @@
 
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 
 const adminService = require('./admin.service');
 const adminConfig = require('./admin.config');
@@ -30,13 +31,7 @@ const adminGuard = function (req, res, next) {
  * @description get all table names
  */
 router.get('/', function (req, res, next) {
-    adminService.tables()
-        .then(tables => {
-            res.status(200);
-            res.send({
-                data: tables
-            })
-        });
+    res.sendFile(path.join(__dirname , 'admin.html'));
 });
 
 /**
@@ -122,7 +117,7 @@ router.patch('/tables/:name/rows', adminGuard, function (req, res, next) {
  * @description remove table row
  */
 router.delete('/tables/:name/rows', adminGuard, function (req, res, next) {
-    adminService.remove(req.params.name, req.query)
+    adminService.remove(req.params.name, req.body)
         .then(() => {
             res.status(200);
             res.send();

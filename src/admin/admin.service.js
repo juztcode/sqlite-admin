@@ -104,8 +104,21 @@ const update = function (tableName, data, conditions) {
 };
 
 const remove = function (tableName, conditions) {
+    const sql_part1 = `DELETE FROM ${tableName}`;
+    const sql_part2 = ' WHERE ';
+    let sql_conditions = '';
+    let sql_final;
+
+    sql_final = sql_part1;
+    if (Object.keys(conditions).length > 0) {
+        sql_conditions = adminHelper.generateMapString(conditions);
+        sql_final += sql_part2 + sql_conditions;
+    }
+
     return new Promise(resolve => {
-        resolve();
+        db.run(sql_final, function (err) {
+            resolve();
+        });
     });
 }
 
