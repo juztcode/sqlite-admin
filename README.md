@@ -31,7 +31,12 @@ const adminRouter = require('path to admin/admin.router');
 
 app.use('/admin', adminRouter);
 ```
-4. start application
+5. set secret key and admin password (you can set them using environment keys or using configuration)
+```bash
+export SECRET="secret key"
+export ADMIN_PASS="admin password"
+```
+6. start application
 ```javascript
 app.listen(3000, () => {
     console.log('server started on http://localhost:3000');
