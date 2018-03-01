@@ -5,7 +5,12 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const adminRouter = require('./admin/admin.router');
+
+// if there are existing db object to access sqlite pass it otherwise pass null
+const adminRouter = require('./admin/admin.router')(null);
+// if there is already existing db object
+// const db = new sqlite3.Database('db/boresy-db.sqlite');
+// const adminRouter = require('./admin/admin.router')(db);
 
 const app = express();
 app.use(bodyParser.json());
