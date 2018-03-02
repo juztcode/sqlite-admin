@@ -1,5 +1,6 @@
-# SQLite admin
-sqlite admin for node.js application based on single html page
+[![Build Status](https://travis-ci.org/juztcode/sqlite-admin.svg?branch=master)](https://travis-ci.org/juztcode/sqlite-admin)
+@juztcode/sqlite-admin is a admin package for express.js websites which use sqlite as the database engine. This is a ongoing project and currently only support view and update functions via the gui.
+sqlite-admin expose url end points to view, update, add, delete table entries and use json web tokens to validate user requests.
 
 # How to use
 1. install sqlite-admin
