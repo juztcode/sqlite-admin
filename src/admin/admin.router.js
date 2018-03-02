@@ -2,31 +2,24 @@
  * if you are using express you can easily redirect admin end point here.
  * see sample server (server.js) for further information
  */
-
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const path = require('path');
 
-const adminConfig = require('./admin.config');
-
-/**
- * @description admin guard middleware
- */
-const adminGuard = function (req, res, next) {
-    const secret = process.env.SECRET || adminConfig.secret;
-    const token = req.get('Authorization');
-    try {
-        jwt.verify(token, secret);
-        next();
-    } catch (err) {
-        res.status(401);
-        res.send();
-    }
-}
-
-module.exports = function (db) {
-    const adminService = require('./admin.service')(db);
+module.exports = function (adminService) {
     const router = express.Router();
+
+    /**
+     * @description admin guard middleware
+     */
+    const adminGuard = function (req, res, next) {
+        const token = req.get('Authorization');
+        if (adminService.validate(token)) {
+            next();
+        } else {
+            res.status(401);
+            res.send();
+        }
+    }
 
     /**
      * @description get all table names

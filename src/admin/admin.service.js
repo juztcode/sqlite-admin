@@ -1,21 +1,24 @@
 const sqlite3 = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
-const adminConfig = require('./admin.config');
 const adminHelper = require('./admin.helper');
 
-module.exports = function (passedDb) {
-    let db = passedDb || new sqlite3.Database(adminConfig.database);
+module.exports = function (config, db) {
+    const validate = function (token) {
+        try {
+            jwt.verify(token, config.secret);
+            return true;
+        } catch (err) {
+            return false;
+        }
+    }
 
     const auth = function (password) {
-        const secret = process.env.SECRET || adminConfig.secret;
-        const adminPass = process.env.ADMIN_PASS || adminConfig.adminPass;
-
-        if (password === adminPass) {
+        if (password === config.adminPass) {
             const token = jwt.sign({
                 type: 'bearer',
                 issuer: 'juztcode',
                 audience: 'admins'
-            }, secret, {
+            }, config.secret, {
                     expiresIn: 60 * 60
                 });
 
@@ -124,6 +127,7 @@ module.exports = function (passedDb) {
     }
 
     return {
+        validate: validate,
         auth: auth,
         tables: tables,
         meta: meta,
