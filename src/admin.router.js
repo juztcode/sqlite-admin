@@ -3,10 +3,13 @@
  * see sample server (server.js) for further information
  */
 const express = require('express');
+const bodyParser = require('body-parser');
 const path = require('path');
 
 module.exports = function (adminService) {
     const router = express.Router();
+
+    router.use(bodyParser.json());
 
     /**
      * @description admin guard middleware

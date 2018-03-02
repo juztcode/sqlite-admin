@@ -1,28 +1,35 @@
 {
-  "name": "sqlite-admin",
+  "name": "@juztcode/sqlite-admin",
   "version": "0.1.0",
   "description": "sqlite admin for node.js application based on single html page",
-  "main": "server.js",
+  "main": "index.js",
+  "author": "randilfernando <randil.fernando@outlook.com>",
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"test\"",
-    "start": "node src/server.js",
-    "start:dev": "nodemon src/server.js"
+    "test": "echo \"test\""
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juztcode/sqlite-admin"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/juztcode/sqlite-admin/issues"
+  },
+  "homepage": "https://github.com/juztcode/sqlite-admin#readme",
+  "private": false,
   "keywords": [
     "node",
     "sqlite",
     "admin",
-    "html"
+    "express"
   ],
-  "author": "randilfernando <randil.fernando@outlook.com>",
-  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.1",
     "sqlite3": "^3.1.13"
-  },
-  "devDependencies": {
-    "nodemon": "^1.14.12"
   }
 }

@@ -1,0 +1,15 @@
+language: node_js
+node_js: 8
+branches:
+  only:
+    - master
+after_success:
+  - npm pack
+deploy:
+  provider: npm
+  email: randil.fernando@outlook.com
+  skip_cleanup: true
+  on:
+    branch: master
+  api_key:
+    secure: iEqsj9XjqocVrVbASBC+xdq2O6pHhNBZRpwT7C88iLp42izyW0rYp6/BTeqXlf7Rdv8Uf2sqQ/4yRI9vhAQOCc7rwutfCMABpo1cQv2THGRIEDmgkHqS8CEobhi+7HE6r/oL3ae37QuAzRP4qFJWABH1al2DQObcnoaN2IxkmmybGq4u8opjPHp1bfiBlUAV98EXwvHaF+IKl3QE3KUL9DdZD6ok+29x/WFxkHz4j8YJ/Orykgqegg/ApeFXmaoSMsslbho41HD29Xg7KIu/lh1SywxaaFZdVWY3NWYnrArLwVntG4L5wv5/sLt5gqGKMNDnA2QeJ4J6LKgfKAFg8+nyOFt+qji3fnhHGvab9WSGzG47FF64ilCVxgehHQhyMPxa+wjzfYGdRghFGe8+rXZV0tAEqWkaMgTP1llhMh6zKBNsrgGkcJthIHQxc69F8W4PuBT6Oauoh/EsP3VKIrUXakt7JyqlCfSwR+mIDkcLUDOwwGf5vdQ49I5pdf27W2V/qSwV/xrCodjiYrhBY60suSnnaR/79Fxy5G29fKhemMxTwKtlWvWYlDdpijoW2b+jRzmNbL+l4Y3L1jDS+D7OgnTO5HaRtezxRCRHfPUdufV8ZNDHR+vyKdKAhDSKTVUcvJ6Ll5AvREPHyEHJ022pahwC010QDklraWx4u6M=
